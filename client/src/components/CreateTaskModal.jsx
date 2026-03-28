@@ -83,12 +83,14 @@ export default function CreateTaskModal({ isOpen, onClose }) {
                         onClick={onClose}
                     />
 
-                    <motion.div
-                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl z-50 max-h-[90vh] overflow-y-auto"
-                        initial={{ opacity: 0, scale: 0.9, y: -20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: -20 }}
-                    >
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+
+                        <motion.div
+                            className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                        >
                         <h2 className="text-2xl font-bold text-gray-800 mb-6">Create New Task</h2>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
@@ -218,7 +220,8 @@ export default function CreateTaskModal({ isOpen, onClose }) {
                                 </button>
                             </div>
                         </form>
-                    </motion.div>
+                        </motion.div>
+                    </div>
                 </>
             )}
         </AnimatePresence>

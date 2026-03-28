@@ -1,8 +1,28 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useTaskStore } from '../stores/taskStore';
 
 export default function TaskCard({ task }) {
     const { completeTask, deleteTask } = useTaskStore();
+    const [rotateX, setRotateX] = useState(0);
+    const [rotateY, setRotateY] = useState(0);
+
+    const handleMouseMove = (e) => {
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const mouseX = e.clientX - centerX;
+        const mouseY = e.clientY - centerY;
+
+        setRotateY(mouseX / 10);
+        setRotateX(-mouseY / 10);
+    };
+
+    const handleMouseLeave = () => {
+        setRotateX(0);
+        setRotateY(0);
+    };
 
     const priorityColors = {
         LOW: 'bg-gray-100 text-gray-800',
@@ -19,11 +39,20 @@ export default function TaskCard({ task }) {
 
     return (
         <motion.div
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+            className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow cursor-pointer"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0, rotateX, rotateY }}
             exit={{ opacity: 0, x: -100 }}
-            whileHover={{ y: -5 }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                transformStyle: 'preserve-3d',
+                perspective: 1000
+            }}
+            transition={{
+                rotateX: { duration: 0.2 },
+                rotateY: { duration: 0.2 }
+            }}
         >
             <div className="flex justify-between items-start mb-3">
                 <h3 className="text-xl font-semibold text-gray-800">

@@ -6,7 +6,9 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
-import Analytics from './pages/Analytics'; // ADD THIS
+import Analytics from './pages/Analytics';
+import Profile from './pages/Profile';
+
 
 function App() {
     const { verifyToken } = useAuthStore();
@@ -34,6 +36,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <Analytics />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute>
+                            <Profile />
                         </ProtectedRoute>
                     }
                 />

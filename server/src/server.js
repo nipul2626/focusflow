@@ -40,12 +40,16 @@ const categoryRoutes = require('./routes/category.routes');
 const timerRoutes = require('./routes/timer.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const aiRoutes = require('./routes/ai.routes');
+const noteRoutes = require('./routes/note.routes');
+const profileRoutes = require('./routes/profile.routes');
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/timer', timerRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/notes', noteRoutes);
+app.use('/api/profile', profileRoutes);
 // Socket.io authentication middleware
 io.use((socket, next) => {
     const token = socket.handshake.auth.token;

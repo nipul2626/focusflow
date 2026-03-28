@@ -19,6 +19,7 @@ model User {
   tasks      Task[]
   categories Category[]
   sessions   PomodoroSession[]
+  notes      Note[]
 }
 
 model Profile {
@@ -59,6 +60,7 @@ model Task {
   categoryId String?
   category   Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   sessions   PomodoroSession[]
+  notes      Note[]
 }
 
 model PomodoroSession {
@@ -96,6 +98,20 @@ model Category {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   tasks Task[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Note {
+  id      String @id @default(uuid())
+  content String
+
+  taskId String?
+  task   Task?   @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

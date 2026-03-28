@@ -46,12 +46,14 @@ export default function CategoryModal({ isOpen, onClose, category = null }) {
                         onClick={onClose}
                     />
 
-                    <motion.div
-                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md z-50"
-                        initial={{ opacity: 0, scale: 0.9, y: -20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: -20 }}
-                    >
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+
+                        <motion.div
+                            className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                        >
                         <h2 className="text-2xl font-bold text-gray-800 mb-6">
                             {category ? 'Edit Category' : 'Create Category'}
                         </h2>
@@ -134,6 +136,7 @@ export default function CategoryModal({ isOpen, onClose, category = null }) {
                             </div>
                         </form>
                     </motion.div>
+                    </div>
                 </>
             )}
         </AnimatePresence>
