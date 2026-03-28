@@ -22,66 +22,95 @@ export default function Signup() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center px-4">
-            <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+        <div className="min-h-screen flex items-center justify-center px-4">
+            <div className="card">
+                <h2 className="card-title">
                     Create Account
                 </h2>
 
                 {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <div className="bg-red-500/20 border border-red-400 text-red-300 px-4 py-3 rounded">
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-gray-700 mb-2">Name</label>
+                <form onSubmit={handleSubmit} className="space-y-5">
+
+                    {/* NAME */}
+                    <div className="relative">
                         <input
                             type="text"
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="custom-input peer"
                             value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            onChange={(e) =>
+                                setFormData({ ...formData, name: e.target.value })
+                            }
                         />
+                        <label className="absolute left-4 top-3 text-gray-300 text-sm transition-all
+                            peer-focus:-top-2 peer-focus:text-xs peer-focus:text-pink-300
+                            peer-valid:-top-2 peer-valid:text-xs backdrop-blur-sm px-1 rounded">
+                            Name
+                        </label>
                     </div>
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">Email</label>
+                    {/* EMAIL */}
+                    <div className="relative">
                         <input
                             type="email"
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="custom-input peer"
                             value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            onChange={(e) =>
+                                setFormData({ ...formData, email: e.target.value })
+                            }
                         />
+                        <label className="absolute left-4 top-3 text-gray-300 text-sm transition-all
+                            peer-focus:-top-2 peer-focus:text-xs peer-focus:text-pink-300
+                            peer-valid:-top-2 peer-valid:text-xs backdrop-blur-sm px-1 rounded">
+                            Email
+                        </label>
                     </div>
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">Password</label>
+                    {/* PASSWORD */}
+                    <div className="relative">
                         <input
                             type="password"
                             required
                             minLength={6}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="custom-input peer"
                             value={formData.password}
-                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            onChange={(e) =>
+                                setFormData({ ...formData, password: e.target.value })
+                            }
                         />
+                        <label className="absolute left-4 top-3 text-gray-300 text-sm transition-all
+                            peer-focus:-top-2 peer-focus:text-xs peer-focus:text-pink-300
+                            peer-valid:-top-2 peer-valid:text-xs backdrop-blur-sm px-1 rounded">
+                            Password
+                        </label>
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
-                    >
-                        {isLoading ? 'Creating account...' : 'Sign Up'}
-                    </button>
+                    {/* BUTTON */}
+                    <div className="custom-btn-container w-full">
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="custom-btn"
+                        >
+                            {isLoading ? 'Creating account...' : 'Sign Up'}
+                        </button>
+                    </div>
                 </form>
 
-                <p className="text-center text-gray-600 mt-4">
+                {/* FOOTER */}
+                <p className="text-center text-gray-400 mt-6 text-sm">
                     Already have an account?{' '}
-                    <Link to="/login" className="text-indigo-600 hover:underline">
-                        Login
+                    <Link
+                        to="/login"
+                        className="font-semibold text-pink-400 hover:text-purple-400 transition duration-300 hover:underline"
+                    >
+                        Login →
                     </Link>
                 </p>
             </div>

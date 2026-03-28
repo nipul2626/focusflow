@@ -21,9 +21,9 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center px-4">
-            <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+        <div className="min-h-screen flex items-center justify-center px-4">
+            <div className="card">
+                <h2 className="card-title">
                     Welcome Back
                 </h2>
 
@@ -34,40 +34,53 @@ export default function Login() {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-gray-700 mb-2">Email</label>
+                    <div className="relative">
                         <input
                             type="email"
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="custom-input peer"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         />
+                        <label className="absolute left-4 top-3 text-gray-200 text-sm transition-all
+peer-focus:-top-2 peer-focus:text-xs peer-focus:text-pink-300
+peer-valid:-top-2 peer-valid:text-xs backdrop-blur-sm px-1 rounded">
+                            Email
+                        </label>
                     </div>
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">Password</label>
+                    <div className="relative">
                         <input
                             type="password"
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="custom-input peer"
                             value={formData.password}
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         />
+                        <label className="absolute left-4 top-3 text-gray-200 text-sm transition-all
+peer-focus:-top-2 peer-focus:text-xs peer-focus:text-pink-300
+peer-valid:-top-2 peer-valid:text-xs backdrop-blur-sm px-1 rounded">
+                            Password
+                        </label>
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
-                    >
-                        {isLoading ? 'Logging in...' : 'Login'}
-                    </button>
+                    <div className="custom-btn-container w-full">
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="custom-btn"
+                        >
+                            {isLoading ? 'Logging in...' : 'Login'}
+                        </button>
+                    </div>
                 </form>
 
                 <p className="text-center text-gray-600 mt-4">
                     Don't have an account?{' '}
-                    <Link to="/signup" className="text-indigo-600 hover:underline">
+                    <Link
+                        to="/signup"
+                        className="text-purple-400 hover:text-pink-400 transition duration-300"
+                    >
                         Sign up
                     </Link>
                 </p>
