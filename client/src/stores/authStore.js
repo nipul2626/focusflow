@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../services/api';
+import { connectSocket, disconnectSocket } from '../services/socket';
 
 export const useAuthStore = create((set) => ({
     user: null,
@@ -12,6 +13,7 @@ export const useAuthStore = create((set) => ({
         try {
             const { data } = await api.post('/auth/register', userData);
             localStorage.setItem('token', data.token);
+            connectSocket(data.token);
             set({
                 user: data.user,
                 token: data.token,
@@ -32,6 +34,7 @@ export const useAuthStore = create((set) => ({
         try {
             const { data } = await api.post('/auth/login', credentials);
             localStorage.setItem('token', data.token);
+            connectSocket(data.token);
             set({
                 user: data.user,
                 token: data.token,
@@ -49,6 +52,7 @@ export const useAuthStore = create((set) => ({
 
     logout: () => {
         localStorage.removeItem('token');
+        disconnectSocket();
         set({ user: null, token: null });
     },
 
@@ -58,6 +62,7 @@ export const useAuthStore = create((set) => ({
 
         try {
             const { data } = await api.get('/auth/verify');
+            connectSocket(token);
             set({ user: data.user });
         } catch (error) {
             localStorage.removeItem('token');
