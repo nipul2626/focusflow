@@ -35,12 +35,12 @@ export default function QuickNotes() {
     };
 
     return (
-        <div className="rounded-3xl border border-white/70 bg-white/65 backdrop-blur-xl shadow-[0_12px_30px_rgba(86,69,140,0.12)] p-6 h-[620px] flex flex-col">
-            <h3 className="text-2xl font-extrabold text-slate-800 mb-4">📝 Quick Notes</h3>
+        <div className="rounded-3xl border border-white/10 bg-slate-900/55 backdrop-blur-xl shadow-[0_12px_30px_rgba(8,8,24,0.55)] p-6 h-[620px] xl:h-[640px] flex flex-col">
+            <h3 className="text-2xl font-extrabold text-slate-100 mb-4">📝 Quick Notes</h3>
 
             <form onSubmit={handleCreate} className="mb-4">
         <textarea
-            className="w-full px-4 py-3 border border-indigo-100 rounded-xl bg-white/90 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 resize-none"
+            className="w-full px-4 py-3 border border-cyan-300/20 rounded-xl bg-slate-950/70 text-slate-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 resize-none"
             rows={3}
             placeholder="Jot down your thoughts..."
             value={newNote}
@@ -54,7 +54,7 @@ export default function QuickNotes() {
                     {notes.map((note) => (
                         <motion.div
                             key={note.id}
-                            className="rounded-2xl border border-indigo-100 bg-gradient-to-br from-white to-indigo-50 p-4"
+                            className="rounded-2xl border border-cyan-300/20 bg-gradient-to-br from-slate-900/80 to-slate-800/80 p-4"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
@@ -79,11 +79,11 @@ export default function QuickNotes() {
                                 </div>
                             ) : (
                                 <>
-                                    <p className="text-slate-700 whitespace-pre-wrap">{note.content}</p>
+                                    <p className="text-slate-200 whitespace-pre-wrap">{note.content}</p>
                                     {note.task && <p className="text-xs text-indigo-500 mt-2">📎 {note.task.title}</p>}
                                     <div className="flex gap-3 mt-3 text-sm">
-                                        <button onClick={() => startEdit(note)} className="text-indigo-600 hover:text-indigo-800 font-medium">Edit</button>
-                                        <button onClick={() => deleteNote(note.id)} className="text-rose-600 hover:text-rose-800 font-medium">Delete</button>
+                                        <button onClick={() => startEdit(note)} className="text-cyan-300 hover:text-cyan-200 font-medium">Edit</button>
+                                        <button onClick={() => deleteNote(note.id)} className="text-rose-300 hover:text-rose-200 font-medium">Delete</button>
                                     </div>
                                 </>
                             )}

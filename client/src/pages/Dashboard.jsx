@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { useTaskStore } from '../stores/taskStore';
-import { useCategoryStore } from '../stores/categoryStore';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import EnhancedTimer from '../components/EnhancedTimer';
+import { useTimerStore } from '../stores/timerStore';
+import Timer from '../components/Timer';
 import TaskCarousel from '../components/TaskCarousel';
 import CreateTaskModal from '../components/CreateTaskModal';
 import Sidebar from '../components/Sidebar';
 import QuickNotes from '../components/QuickNotes';
+import GlowButton from '../components/GlowButton';
 
 export default function Dashboard() {
     const { user, logout } = useAuthStore();
     const { tasks, fetchTasks, isLoading } = useTaskStore();
+    const { isRunning: isTimerRunning } = useTimerStore();
     const navigate = useNavigate();
 
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -21,18 +23,11 @@ export default function Dashboard() {
 
     useEffect(() => {
         const filters = {};
-        if (selectedCategory) {
-            filters.categoryId = selectedCategory;
-        }
+        if (selectedCategory) filters.categoryId = selectedCategory;
         fetchTasks(filters);
     }, [selectedCategory]);
 
-    const handleLogout = () => {
-        logout();
-        navigate('/');
-    };
-
-    const filteredTasks = tasks.filter(task => {
+    const filteredTasks = tasks.filter((task) => {
         if (filter === 'all') return true;
         if (filter === 'active') return task.status !== 'COMPLETED';
         if (filter === 'completed') return task.status === 'COMPLETED';
@@ -40,121 +35,77 @@ export default function Dashboard() {
     });
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-            {/* Header */}
-            <header className="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-30">
-                <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-indigo-600">Focus Flow</h1>
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => navigate('/analytics')}
-                            className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition"
-                        >
-                            📊 Analytics
-                        </button>
-                        <button
-                            onClick={() => navigate('/profile')}
-                            className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition"
-                        >
-                            👤 Profile
-                        </button>
-                        <span className="text-gray-600">Welcome, {user?.name}!</span>
-                        <button
-                            onClick={handleLogout}
-                            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                        >
-                            Logout
-                        </button>
+        <div className={`dashboard-shell min-h-screen ${isTimerRunning ? 'timer-active' : ''}`}>
+            <div className="dashboard-aurora" />
+            <div className="dashboard-grid-overlay" />
+
+            <header className="sticky top-0 z-30 border-b border-white/10 bg-slate-950/45 backdrop-blur-xl">
+                <div className="max-w-[1400px] mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-3 relative z-10">
+                    <h1 className="text-3xl font-extrabold bg-gradient-to-r from-cyan-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">
+                        Focus Flow
+                    </h1>
+
+                    <div className="flex flex-wrap items-center gap-3">
+                        <GlowButton onClick={() => navigate('/analytics')} className="min-w-[120px]">📊 Analytics</GlowButton>
+                        <GlowButton variant="subtle" onClick={() => navigate('/profile')} className="min-w-[110px]">👤 Profile</GlowButton>
+                        <span className="text-slate-200 font-medium px-2">Welcome, {user?.name}!</span>
+                        <GlowButton variant="danger" onClick={() => { logout(); navigate('/'); }} className="min-w-[98px]">Logout</GlowButton>
                     </div>
                 </div>
             </header>
 
-            {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 py-8">
-                {/* Enhanced Timer */}
-                <section className="mb-8">
-                    <EnhancedTimer />
+            <main className="max-w-[1400px] mx-auto px-4 py-8 relative z-10">
+                <section className="rounded-3xl border border-cyan-300/25 bg-slate-900/55 backdrop-blur-xl shadow-[0_14px_38px_rgba(9,8,24,0.45)] p-8 mb-8 transition-all duration-500">
+                    <Timer />
                 </section>
 
-                {/* Tasks Section with 3-column layout */}
-                <div className="grid grid-cols-12 gap-6">
-                    {/* Sidebar */}
-                    <div className="col-span-2">
-                        <Sidebar
-                            selectedCategory={selectedCategory}
-                            onCategorySelect={setSelectedCategory}
-                        />
-                    </div>
+                <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                    <aside className="xl:col-span-2 xl:max-h-[640px]">
+                        <Sidebar selectedCategory={selectedCategory} onCategorySelect={setSelectedCategory} />
+                    </aside>
 
-                    {/* Tasks Carousel */}
-                    <div className="col-span-7">
-                        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6">
-                            <div className="flex justify-between items-center mb-6">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-gray-800">Your Tasks</h2>
-                                    <div className="flex gap-2 mt-3">
+                    <section className="xl:col-span-7 rounded-3xl border border-violet-200/20 bg-slate-900/55 backdrop-blur-xl shadow-[0_18px_40px_rgba(8,8,24,0.5)] p-6 lg:p-8 min-h-[640px]">
+                        <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+                            <div>
+                                <h2 className="text-3xl font-extrabold text-slate-100">Your Tasks</h2>
+                                <div className="flex flex-wrap gap-2 mt-3">
+                                    {['all', 'active', 'completed'].map((value) => (
                                         <button
-                                            onClick={() => setFilter('all')}
-                                            className={`px-4 py-2 rounded-lg transition ${
-                                                filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'
+                                            key={value}
+                                            onClick={() => setFilter(value)}
+                                            className={`px-4 py-2 rounded-xl capitalize font-medium transition ${
+                                                filter === value
+                                                    ? 'bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white shadow-md'
+                                                    : 'bg-white/10 text-slate-200 border border-white/15 hover:border-cyan-300/50'
                                             }`}
                                         >
-                                            All
+                                            {value}
                                         </button>
-                                        <button
-                                            onClick={() => setFilter('active')}
-                                            className={`px-4 py-2 rounded-lg transition ${
-                                                filter === 'active' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'
-                                            }`}
-                                        >
-                                            Active
-                                        </button>
-                                        <button
-                                            onClick={() => setFilter('completed')}
-                                            className={`px-4 py-2 rounded-lg transition ${
-                                                filter === 'completed' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'
-                                            }`}
-                                        >
-                                            Completed
-                                        </button>
-                                    </div>
+                                    ))}
                                 </div>
-
-                                <motion.button
-                                    onClick={() => setIsCreateModalOpen(true)}
-                                    className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition"
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                >
-                                    + New Task
-                                </motion.button>
                             </div>
 
-                            {isLoading ? (
-                                <div className="flex justify-center py-12">
-                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-                                </div>
-                            ) : filteredTasks.length === 0 ? (
-                                <div className="text-center py-12 text-gray-500">
-                                    <p className="text-lg">No tasks yet. Create your first task!</p>
-                                </div>
-                            ) : (
-                                <TaskCarousel tasks={filteredTasks} />
-                            )}
+                            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                                <GlowButton className="min-w-[150px]" onClick={() => setIsCreateModalOpen(true)}>+ New Task</GlowButton>
+                            </motion.div>
                         </div>
-                    </div>
 
-                    {/* Quick Notes */}
-                    <div className="col-span-3">
+                        {isLoading ? (
+                            <div className="flex justify-center py-20">
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400" />
+                            </div>
+                        ) : (
+                            <TaskCarousel tasks={filteredTasks} />
+                        )}
+                    </section>
+
+                    <aside className="xl:col-span-3 xl:max-h-[640px]">
                         <QuickNotes />
-                    </div>
+                    </aside>
                 </div>
             </main>
 
-            <CreateTaskModal
-                isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
-            />
+            <CreateTaskModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />
         </div>
     );
 }
