@@ -1,22 +1,24 @@
 {
-  "name": "server",
+  "name": "focus-flow-backend",
   "version": "1.0.0",
   "description": "Focus Flow Backend API",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "prisma": "prisma",
-    "build": "prisma generate"
+    "build": "prisma generate",
+    "migrate": "prisma migrate deploy",
+    "seed": "node prisma/seed.js"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
-  "keywords": [],
   "author": "Nipul Rathod",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",
+    "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.9.0",
     "cors": "^2.8.5",
@@ -28,7 +30,6 @@
     "socket.io": "^4.8.3"
   },
   "devDependencies": {
-    "@prisma/client": "^5.22.0",
     "nodemon": "^3.0.2",
     "prisma": "^5.22.0"
   }
