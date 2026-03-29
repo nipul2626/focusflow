@@ -308,7 +308,7 @@ html {
 .task-ring {
   --w: 180px;
   --h: 260px;
-  --translateZ: 320px;
+  --translateZ: 280px;
   --rotateX: -12deg;
   --perspective: 1200px;
   position: relative;
@@ -529,5 +529,5 @@ html {
 }
 @keyframes particleBurst {
   0% { transform: translate(0, 0) scale(1); opacity: 1; }
-  100% { transform: translate(calc(cos(var(--angle)) * 40px), calc(sin(var(--angle)) * 40px)) scale(0); opacity: 0; }
+  100% { transform: translateY(-34px) scale(0); opacity: 0; }
 }
