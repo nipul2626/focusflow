@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import GlowButton from '../components/GlowButton';
 
 const PRESET_COLORS = [
-    '#ef4444', '#f97316', '#f59e0b', '#84cc16',
-    '#22c55e', '#10b981', '#06b6d4', '#0ea5e9',
-    '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7',
-    '#d946ef', '#ec4899'
+    '#22d3ee', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899',
+    '#f43f5e', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#06b6d4', '#60a5fa', '#c084fc',
 ];
 
 export default function Profile() {
     const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
+    const [saveState, setSaveState] = useState('idle');
     const [avatarFile, setAvatarFile] = useState(null);
     const [avatarPreview, setAvatarPreview] = useState(null);
 
@@ -24,233 +23,181 @@ export default function Profile() {
         accentColor: '#6366f1',
         focusDuration: 25,
         shortBreak: 5,
-        longBreak: 15
+        longBreak: 15,
     });
 
     useEffect(() => {
-        fetchProfile();
+        (async () => {
+            try {
+                const { data } = await api.get('/profile');
+                setProfile(data.profile);
+                setFormData({
+                    displayName: data.profile.displayName || '',
+                    bio: data.profile.bio || '',
+                    accentColor: data.profile.accentColor || '#6366f1',
+                    focusDuration: data.profile.focusDuration || 25,
+                    shortBreak: data.profile.shortBreak || 5,
+                    longBreak: data.profile.longBreak || 15,
+                });
+            } catch (error) {
+                console.error('Fetch profile error:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        })();
     }, []);
 
-    const fetchProfile = async () => {
-        try {
-            const { data } = await api.get('/profile');
-            setProfile(data.profile);
-            setFormData({
-                displayName: data.profile.displayName || '',
-                bio: data.profile.bio || '',
-                accentColor: data.profile.accentColor,
-                focusDuration: data.profile.focusDuration,
-                shortBreak: data.profile.shortBreak,
-                longBreak: data.profile.longBreak
-            });
-        } catch (error) {
-            console.error('Fetch profile error:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     const handleAvatarChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setAvatarFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setAvatarPreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setAvatarFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => setAvatarPreview(reader.result);
+        reader.readAsDataURL(file);
     };
 
     const handleUploadAvatar = async () => {
         if (!avatarFile) return;
-
-        const formData = new FormData();
-        formData.append('avatar', avatarFile);
+        const payload = new FormData();
+        payload.append('avatar', avatarFile);
 
         try {
-            const { data } = await api.post('/profile/avatar', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+            const { data } = await api.post('/profile/avatar', payload, {
+                headers: { 'Content-Type': 'multipart/form-data' },
             });
             setProfile(data.profile);
             setAvatarFile(null);
             setAvatarPreview(null);
-            alert('Avatar uploaded successfully!');
         } catch (error) {
             console.error('Upload avatar error:', error);
-            alert('Failed to upload avatar');
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsSaving(true);
-
+        setSaveState('saving');
         try {
             const { data } = await api.put('/profile', formData);
             setProfile(data.profile);
-            alert('Profile updated successfully!');
+            setSaveState('saved');
+            setTimeout(() => setSaveState('idle'), 1600);
         } catch (error) {
             console.error('Update profile error:', error);
-            alert('Failed to update profile');
-        } finally {
-            setIsSaving(false);
+            setSaveState('idle');
         }
     };
 
     if (isLoading) {
-        return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-            </div>
-        );
+        return <div className="dashboard-shell min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400" /></div>;
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-8">
-            <div className="max-w-4xl mx-auto">
-                <div className="mb-6">
-                    <button
-                        onClick={() => navigate('/dashboard')}
-                        className="text-indigo-600 hover:text-indigo-800 font-medium"
-                    >
-                        ← Back to Dashboard
-                    </button>
-                </div>
+        <div className="dashboard-shell min-h-screen">
+            <div className="dashboard-aurora" />
+            <div className="dashboard-grid-overlay" />
 
+            <header className="sticky top-0 z-30 border-b border-white/10 bg-slate-950/45 backdrop-blur-xl">
+                <div className="max-w-[1000px] mx-auto px-4 py-4 flex items-center justify-between gap-3 relative z-10">
+                    <h1 className="text-3xl font-extrabold bg-gradient-to-r from-cyan-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">Focus Flow</h1>
+                    <div className="flex gap-3">
+                        <GlowButton onClick={() => navigate('/dashboard')}>← Dashboard</GlowButton>
+                        <GlowButton variant="subtle" onClick={() => navigate('/analytics')}>📊 Analytics</GlowButton>
+                    </div>
+                </div>
+            </header>
+
+            <main className="max-w-[1000px] mx-auto px-4 py-8 relative z-10">
                 <motion.div
-                    className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8"
-                    initial={{ opacity: 0, y: 20 }}
+                    className="rounded-3xl border border-cyan-300/20 bg-slate-900/60 backdrop-blur-xl shadow-[0_20px_50px_rgba(8,8,24,0.55)] p-8"
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
-                    <h1 className="text-3xl font-bold text-gray-800 mb-8">Profile Settings</h1>
+                    <h2 className="text-3xl font-extrabold text-slate-100 mb-8">Profile Settings</h2>
 
-                    {/* Avatar Section */}
                     <div className="mb-8">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Profile Picture</h2>
-                        <div className="flex items-center gap-6">
-                            <div className="relative">
+                        <h3 className="text-lg font-semibold text-slate-200 mb-4">Profile Picture</h3>
+                        <div className="flex items-center gap-6 flex-wrap">
+                            <div className="relative group">
+                                <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-cyan-400 via-violet-400 to-fuchsia-500 opacity-70 blur-sm group-hover:opacity-100 transition" />
                                 <img
                                     src={avatarPreview || profile?.avatarUrl || 'https://via.placeholder.com/150'}
                                     alt="Avatar"
-                                    className="w-32 h-32 rounded-full object-cover border-4 border-indigo-200"
+                                    className="relative w-32 h-32 rounded-full object-cover border-4 border-slate-900"
                                 />
                             </div>
-                            <div>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleAvatarChange}
-                                    className="hidden"
-                                    id="avatar-upload"
-                                />
-                                <label
-                                    htmlFor="avatar-upload"
-                                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 cursor-pointer inline-block"
-                                >
-                                    Choose Photo
-                                </label>
-                                {avatarFile && (
-                                    <button
-                                        onClick={handleUploadAvatar}
-                                        className="ml-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                    >
-                                        Upload
-                                    </button>
-                                )}
+
+                            <div className="flex gap-3 items-center">
+                                <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" id="avatar-upload" />
+                                <label htmlFor="avatar-upload" className="cursor-pointer"><GlowButton>Choose Photo</GlowButton></label>
+                                {avatarFile && <GlowButton variant="subtle" onClick={handleUploadAvatar}>Upload</GlowButton>}
                             </div>
                         </div>
                     </div>
 
-                    {/* Profile Form */}
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label className="block text-gray-700 font-medium mb-2">Display Name</label>
+                            <label className="block text-slate-200 font-medium mb-2">Display Name</label>
                             <input
                                 type="text"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-4 py-3 rounded-xl bg-slate-950/70 text-slate-100 border border-cyan-300/20 focus:outline-none focus:ring-2 focus:ring-cyan-400"
                                 value={formData.displayName}
                                 onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-gray-700 font-medium mb-2">Bio</label>
+                            <label className="block text-slate-200 font-medium mb-2">Bio</label>
                             <textarea
                                 rows={3}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-4 py-3 rounded-xl bg-slate-950/70 text-slate-100 border border-cyan-300/20 focus:outline-none focus:ring-2 focus:ring-cyan-400"
                                 value={formData.bio}
                                 onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-gray-700 font-medium mb-2">Accent Color</label>
-                            <div className="grid grid-cols-7 gap-3">
-                                {PRESET_COLORS.map(color => (
+                            <label className="block text-slate-200 font-medium mb-2">Accent Color</label>
+                            <div className="grid grid-cols-8 gap-3">
+                                {PRESET_COLORS.map((color) => (
                                     <button
                                         key={color}
                                         type="button"
                                         onClick={() => setFormData({ ...formData, accentColor: color })}
-                                        className={`w-12 h-12 rounded-lg border-4 transition ${
-                                            formData.accentColor === color
-                                                ? 'border-gray-800 scale-110'
-                                                : 'border-gray-200'
-                                        }`}
+                                        className={`w-10 h-10 rounded-xl border-2 transition ${formData.accentColor === color ? 'border-white scale-110 shadow-[0_0_14px_rgba(255,255,255,0.45)]' : 'border-white/20'}`}
                                         style={{ backgroundColor: color }}
                                     />
                                 ))}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-4">
-                            <div>
-                                <label className="block text-gray-700 font-medium mb-2">Focus Duration (min)</label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    max="60"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    value={formData.focusDuration}
-                                    onChange={(e) => setFormData({ ...formData, focusDuration: parseInt(e.target.value) })}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 font-medium mb-2">Short Break (min)</label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    max="30"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    value={formData.shortBreak}
-                                    onChange={(e) => setFormData({ ...formData, shortBreak: parseInt(e.target.value) })}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 font-medium mb-2">Long Break (min)</label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    max="60"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    value={formData.longBreak}
-                                    onChange={(e) => setFormData({ ...formData, longBreak: parseInt(e.target.value) })}
-                                />
-                            </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {[['Focus Duration (min)', 'focusDuration', 60], ['Short Break (min)', 'shortBreak', 30], ['Long Break (min)', 'longBreak', 60]].map(([label, key, max]) => (
+                                <div key={key}>
+                                    <label className="block text-slate-200 font-medium mb-2">{label}</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max={max}
+                                        className="w-full px-4 py-3 rounded-xl bg-slate-950/70 text-slate-100 border border-cyan-300/20 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                                        value={formData[key]}
+                                        onChange={(e) => setFormData({ ...formData, [key]: parseInt(e.target.value, 10) || 1 })}
+                                    />
+                                </div>
+                            ))}
                         </div>
 
                         <motion.button
                             type="submit"
-                            disabled={isSaving}
-                            className="w-full px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            disabled={saveState === 'saving'}
+                            className={`w-full px-6 py-3 rounded-xl font-semibold text-white transition ${saveState === 'saved' ? 'bg-emerald-500' : 'bg-gradient-to-r from-cyan-500 via-violet-500 to-fuchsia-500'}`}
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
                         >
-                            {isSaving ? 'Saving...' : 'Save Changes'}
+                            {saveState === 'saving' ? 'Saving...' : saveState === 'saved' ? 'Saved ✓' : 'Save Changes'}
                         </motion.button>
                     </form>
                 </motion.div>
-            </div>
+            </main>
         </div>
     );
 }
