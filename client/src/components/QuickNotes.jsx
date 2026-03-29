@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNoteStore } from '../stores/noteStore';
+import GlowButton from './GlowButton';
 
 export default function QuickNotes() {
     const { notes, fetchNotes, createNote, updateNote, deleteNote } = useNoteStore();
@@ -15,16 +16,12 @@ export default function QuickNotes() {
     const handleCreate = async (e) => {
         e.preventDefault();
         if (!newNote.trim()) return;
-
         const success = await createNote(newNote);
-        if (success) {
-            setNewNote('');
-        }
+        if (success) setNewNote('');
     };
 
     const handleUpdate = async (id) => {
         if (!editContent.trim()) return;
-
         const success = await updateNote(id, editContent);
         if (success) {
             setEditingId(null);
@@ -38,55 +35,43 @@ export default function QuickNotes() {
     };
 
     return (
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 h-[600px] flex flex-col">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">📝 Quick Notes</h3>
+        <div className="rounded-3xl border border-white/70 bg-white/65 backdrop-blur-xl shadow-[0_12px_30px_rgba(86,69,140,0.12)] p-6 h-[620px] flex flex-col">
+            <h3 className="text-2xl font-extrabold text-slate-800 mb-4">📝 Quick Notes</h3>
 
-            {/* Create Note */}
             <form onSubmit={handleCreate} className="mb-4">
         <textarea
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+            className="w-full px-4 py-3 border border-indigo-100 rounded-xl bg-white/90 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 resize-none"
             rows={3}
             placeholder="Jot down your thoughts..."
             value={newNote}
             onChange={(e) => setNewNote(e.target.value)}
         />
-                <button
-                    type="submit"
-                    className="mt-2 w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
-                >
-                    Add Note
-                </button>
+                <GlowButton type="submit" className="mt-3 w-full">Add Note</GlowButton>
             </form>
 
-            {/* Notes List */}
-            <div className="flex-1 overflow-y-auto space-y-3">
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
                 <AnimatePresence>
-                    {notes.map(note => (
+                    {notes.map((note) => (
                         <motion.div
                             key={note.id}
-                            className="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
+                            className="rounded-2xl border border-indigo-100 bg-gradient-to-br from-white to-indigo-50 p-4"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
                         >
                             {editingId === note.id ? (
                                 <div>
                   <textarea
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-indigo-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
                       rows={3}
                       value={editContent}
                       onChange={(e) => setEditContent(e.target.value)}
                   />
                                     <div className="flex gap-2 mt-2">
-                                        <button
-                                            onClick={() => handleUpdate(note.id)}
-                                            className="px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600"
-                                        >
-                                            Save
-                                        </button>
+                                        <GlowButton className="flex-1" onClick={() => handleUpdate(note.id)}>Save</GlowButton>
                                         <button
                                             onClick={() => setEditingId(null)}
-                                            className="px-3 py-1 bg-gray-400 text-white rounded text-sm hover:bg-gray-500"
+                                            className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
                                         >
                                             Cancel
                                         </button>
@@ -94,25 +79,11 @@ export default function QuickNotes() {
                                 </div>
                             ) : (
                                 <>
-                                    <p className="text-gray-800 whitespace-pre-wrap">{note.content}</p>
-                                    {note.task && (
-                                        <p className="text-xs text-gray-500 mt-2">
-                                            📎 {note.task.title}
-                                        </p>
-                                    )}
-                                    <div className="flex gap-2 mt-3 text-xs">
-                                        <button
-                                            onClick={() => startEdit(note)}
-                                            className="text-indigo-600 hover:text-indigo-800"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => deleteNote(note.id)}
-                                            className="text-red-600 hover:text-red-800"
-                                        >
-                                            Delete
-                                        </button>
+                                    <p className="text-slate-700 whitespace-pre-wrap">{note.content}</p>
+                                    {note.task && <p className="text-xs text-indigo-500 mt-2">📎 {note.task.title}</p>}
+                                    <div className="flex gap-3 mt-3 text-sm">
+                                        <button onClick={() => startEdit(note)} className="text-indigo-600 hover:text-indigo-800 font-medium">Edit</button>
+                                        <button onClick={() => deleteNote(note.id)} className="text-rose-600 hover:text-rose-800 font-medium">Delete</button>
                                     </div>
                                 </>
                             )}
