@@ -11,13 +11,7 @@
 
 ---
 
-## 📸 Screenshots
 
-![Dashboard](./docs/screenshots/dashboard.png)
-![Timer](./docs/screenshots/timer.png)
-![Analytics](./docs/screenshots/analytics.png)
-
----
 
 ## ✨ Features
 
