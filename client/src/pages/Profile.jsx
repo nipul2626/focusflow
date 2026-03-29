@@ -128,8 +128,18 @@ export default function Profile() {
 
                             <div className="flex gap-3 items-center">
                                 <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" id="avatar-upload" />
-                                <label htmlFor="avatar-upload" className="cursor-pointer"><GlowButton>Choose Photo</GlowButton></label>
-                                {avatarFile && <GlowButton variant="subtle" onClick={handleUploadAvatar}>Upload</GlowButton>}
+                                <GlowButton onClick={() => document.getElementById('avatar-upload').click()}>
+                                    Choose Photo
+                                </GlowButton>
+                                {avatarFile && (
+                                    <GlowButton
+                                        type="button"
+                                        variant="subtle"
+                                        onClick={handleUploadAvatar}
+                                    >
+                                        Upload
+                                    </GlowButton>
+                                )}
                             </div>
                         </div>
                     </div>
