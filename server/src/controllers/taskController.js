@@ -1,12 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Get all tasks for user
+
 exports.getTasks = async (req, res) => {
     try {
         const { status, categoryId, search } = req.query;
 
-        // Build filter
+
         const where = {
             userId: req.userId,
             isArchived: false
@@ -46,7 +46,6 @@ exports.getTasks = async (req, res) => {
     }
 };
 
-// Create task
 exports.createTask = async (req, res) => {
     try {
         const { title, description, priority, estimatedMinutes, dueDate, categoryId } = req.body;
@@ -81,7 +80,7 @@ exports.createTask = async (req, res) => {
     }
 };
 
-// Get single task
+
 exports.getTaskById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -108,13 +107,13 @@ exports.getTaskById = async (req, res) => {
     }
 };
 
-// Update task
+
 exports.updateTask = async (req, res) => {
     try {
         const { id } = req.params;
         const { title, description, status, priority, estimatedMinutes, dueDate, categoryId } = req.body;
 
-        // Check task exists and belongs to user
+
         const existingTask = await prisma.task.findFirst({
             where: { id, userId: req.userId }
         });
@@ -150,7 +149,7 @@ exports.updateTask = async (req, res) => {
     }
 };
 
-// Delete task (soft delete - archive)
+
 exports.deleteTask = async (req, res) => {
     try {
         const { id } = req.params;
@@ -176,7 +175,7 @@ exports.deleteTask = async (req, res) => {
     }
 };
 
-// Mark task complete
+
 exports.completeTask = async (req, res) => {
     try {
         const { id } = req.params;
@@ -211,7 +210,7 @@ exports.completeTask = async (req, res) => {
     }
 };
 
-// Restore archived task
+
 exports.restoreTask = async (req, res) => {
     try {
         const { id } = req.params;

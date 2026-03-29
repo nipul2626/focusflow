@@ -8,7 +8,7 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 
-// Socket.io setup
+
 const io = new Server(server, {
     cors: {
         origin: 'http://localhost:5173',
@@ -17,14 +17,14 @@ const io = new Server(server, {
     }
 });
 
-// Middleware
+
 app.use(cors());
 app.use(express.json());
 
-// Make io accessible to routes
+
 app.set('io', io);
 
-// Test route
+
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'ok',
@@ -33,7 +33,7 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Routes
+
 const authRoutes = require('./routes/auth.routes');
 const taskRoutes = require('./routes/task.routes');
 const categoryRoutes = require('./routes/category.routes');
@@ -50,7 +50,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/profile', profileRoutes);
-// Socket.io authentication middleware
+
 io.use((socket, next) => {
     const token = socket.handshake.auth.token;
 
@@ -67,14 +67,14 @@ io.use((socket, next) => {
     }
 });
 
-// Socket.io connection handling
+
 io.on('connection', (socket) => {
     console.log(`✅ User connected: ${socket.userId}`);
 
-    // Join user to their personal room
+
     socket.join(`user:${socket.userId}`);
 
-    // Timer events
+
     socket.on('timer:start', (data) => {
         io.to(`user:${socket.userId}`).emit('timer:started', data);
     });
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
         io.to(`user:${socket.userId}`).emit('timer:completed', data);
     });
 
-    // Task events
+
     socket.on('task:created', (task) => {
         io.to(`user:${socket.userId}`).emit('task:new', task);
     });
@@ -105,7 +105,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// Error handling middleware
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({

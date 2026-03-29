@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Get all notes
+
 exports.getNotes = async (req, res) => {
     try {
         const { taskId } = req.query;
@@ -32,7 +32,7 @@ exports.getNotes = async (req, res) => {
     }
 };
 
-// Create note
+
 exports.createNote = async (req, res) => {
     try {
         const { content, taskId } = req.body;
@@ -68,7 +68,7 @@ exports.createNote = async (req, res) => {
     }
 };
 
-// Update note
+
 exports.updateNote = async (req, res) => {
     try {
         const { id } = req.params;
@@ -98,7 +98,7 @@ exports.updateNote = async (req, res) => {
     }
 };
 
-// Delete note
+
 exports.deleteNote = async (req, res) => {
     try {
         const { id } = req.params;

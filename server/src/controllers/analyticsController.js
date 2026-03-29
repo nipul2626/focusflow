@@ -1,14 +1,13 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Get dashboard overview
+
 exports.getOverview = async (req, res) => {
     try {
         const userId = req.userId;
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // Today's stats
         const todaySessions = await prisma.pomodoroSession.aggregate({
             where: {
                 userId,
@@ -27,7 +26,7 @@ exports.getOverview = async (req, res) => {
             }
         });
 
-        // Weekly data (last 7 days)
+
         const weekAgo = new Date();
         weekAgo.setDate(weekAgo.getDate() - 7);
 
@@ -43,7 +42,7 @@ exports.getOverview = async (req, res) => {
             }
         });
 
-        // Group by date
+
         const dailyData = {};
         for (let i = 6; i >= 0; i--) {
             const date = new Date();
@@ -60,7 +59,7 @@ exports.getOverview = async (req, res) => {
             }
         });
 
-        // Category breakdown
+
         const categoryStats = await prisma.task.groupBy({
             by: ['categoryId'],
             where: {
@@ -86,7 +85,7 @@ exports.getOverview = async (req, res) => {
             })
         );
 
-        // Total stats
+
         const totalSessions = await prisma.pomodoroSession.count({
             where: { userId, completed: true }
         });
@@ -121,10 +120,10 @@ exports.getOverview = async (req, res) => {
     }
 };
 
-// Get productivity trends
+
 exports.getTrends = async (req, res) => {
     try {
-        const { period } = req.query; // 'week', 'month', 'year'
+        const { period } = req.query;
         const userId = req.userId;
 
         let startDate = new Date();

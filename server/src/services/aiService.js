@@ -4,10 +4,10 @@ const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
 });
 
-// 🧠 Safe JSON extractor
+
 const extractJSON = (text) => {
     try {
-        // Remove markdown if present
+
         text = text.replace(/```json/g, '').replace(/```/g, '');
 
         const match = text.match(/\{[\s\S]*\}/);
@@ -20,7 +20,7 @@ const extractJSON = (text) => {
     }
 };
 
-// 🛡️ Fallback (VERY IMPORTANT)
+
 const fallbackResponse = (taskDescription) => {
     return {
         subtasks: [
@@ -36,7 +36,7 @@ const fallbackResponse = (taskDescription) => {
 exports.analyzeTask = async (taskDescription) => {
     try {
         const completion = await groq.chat.completions.create({
-            model: "llama-3.1-8b-instant", // ✅ fast + free
+            model: "llama-3.1-8b-instant",
             messages: [
                 {
                     role: "user",

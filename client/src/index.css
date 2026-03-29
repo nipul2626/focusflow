@@ -2,14 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* RESET */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* BODY BACKGROUND (Premium Dark UI) */
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
   'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
@@ -21,7 +21,7 @@ body {
   background: radial-gradient(circle at 20% 20%, #1f1f3a, #0a0a12);
   min-height: 100vh;
 }
-/* Animated Gradient Background */
+
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;
@@ -46,7 +46,7 @@ body {
   animation: gradientShift 15s ease infinite;
 }
 
-/* Glassmorphism */
+
 .glass {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -55,7 +55,7 @@ body {
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 }
 
-/* Respect reduced motion */
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -66,7 +66,7 @@ body {
   }
 }
 
-/* OPTIONAL GLOW EFFECT */
+
 body::before {
   content: "";
   position: fixed;
@@ -80,7 +80,7 @@ body::before {
   z-index: 0;
 }
 
-/* ================= BUTTON ================= */
+
 
 .custom-btn {
   font-size: 1.2em;
@@ -132,7 +132,7 @@ body::before {
   filter: blur(0.2em);
 }
 
-/* ================= INPUT ================= */
+
 
 .custom-input {
   color: white;
@@ -157,7 +157,7 @@ body::before {
   box-shadow: 2px 2px 15px #8707ff inset;
 }
 
-/* ================= CARD ================= */
+
 
 .card {
   position: relative;
@@ -200,7 +200,7 @@ body::before {
   pointer-events: none;
 }
 
-/* HOVER EFFECT FIXED */
+
 .card:hover::after {
   filter: blur(35px);
 }
@@ -209,7 +209,7 @@ body::before {
   transform: rotate(-10deg) scale(1.05);
 }
 
-/* ================= TEXT ================= */
+
 
 .card-title {
   font-size: 30px;
@@ -219,7 +219,7 @@ body::before {
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.6),
   0 0 20px rgba(168, 85, 247, 0.5);
 }
-/* ================= LINKS ================= */
+
 
 a {
   transition: all 0.3s ease;
@@ -229,7 +229,7 @@ a:hover {
   color: #ff4ecd;
 }
 
-/* 🌊 LIQUID WAVE */
+
 .wave {
   position: absolute;
   width: 200%;
@@ -253,7 +253,7 @@ a:hover {
   }
 }
 
-/* 🎯 CURSOR GLOW */
+
 .cursor-glow {
   position: fixed;
   width: 300px;
@@ -264,18 +264,18 @@ a:hover {
   z-index: 999;
   transform: translate(-50%, -50%);
 }
-/* smoother scroll */
+
 html {
   scroll-behavior: smooth;
 }
 
-/* reduce heavy glow */
+
 .cursor-glow {
   width: 200px;
   height: 200px;
   opacity: 0.2;
 }
-/* better section spacing */
+
 .section {
   padding: 50px 20px;
 }
@@ -286,7 +286,7 @@ html {
   }
 }
 
-/* glass polish */
+
 .glass {
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(16px);
@@ -304,7 +304,7 @@ html {
   --quantity: 10;
   --index: 0;
 }
-/* Task carousel ring */
+
 .task-ring {
   --w: 180px;
   --h: 260px;
@@ -356,7 +356,7 @@ html {
   }
 }
 
-/* Dashboard hybrid dark background */
+
 .dashboard-shell {
   position: relative;
   background: radial-gradient(circle at 20% 10%, rgba(133, 57, 255, 0.28), transparent 35%),
@@ -411,7 +411,7 @@ html {
   }
 }
 
-/* Cosmic toggle */
+
 .cosmic-toggle {
   position: relative;
   width: 140px;

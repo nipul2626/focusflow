@@ -4,17 +4,17 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-// Register new user
+
 exports.register = async (req, res) => {
     try {
         const { email, password, name } = req.body;
 
-        // Validation
+
         if (!email || !password || !name) {
             return res.status(400).json({ error: 'Please provide all required fields' });
         }
 
-        // Check if user exists
+
         const existingUser = await prisma.user.findUnique({
             where: { email }
         });
@@ -23,11 +23,11 @@ exports.register = async (req, res) => {
             return res.status(400).json({ error: 'Email already registered' });
         }
 
-        // Hash password
+
         const salt = await bcrypt.genSalt(12);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create user with profile
+
         const user = await prisma.user.create({
             data: {
                 email,
@@ -45,7 +45,7 @@ exports.register = async (req, res) => {
             }
         });
 
-        // Generate JWT token
+
         const token = jwt.sign(
             { userId: user.id },
             process.env.JWT_SECRET,
@@ -64,17 +64,17 @@ exports.register = async (req, res) => {
     }
 };
 
-// Login user
+
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Validation
+
         if (!email || !password) {
             return res.status(400).json({ error: 'Please provide email and password' });
         }
 
-        // Find user
+
         const user = await prisma.user.findUnique({
             where: { email },
             include: { profile: true }
@@ -84,21 +84,21 @@ exports.login = async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // Check password
+
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // Generate token
+
         const token = jwt.sign(
             { userId: user.id },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
-        // Remove password from response
+
         const { password: _, ...userWithoutPassword } = user;
 
         res.json({
@@ -113,7 +113,6 @@ exports.login = async (req, res) => {
     }
 };
 
-// Verify token and get user
 exports.verify = async (req, res) => {
     try {
         const user = await prisma.user.findUnique({
@@ -139,7 +138,6 @@ exports.verify = async (req, res) => {
     }
 };
 
-// Logout (client-side will remove token)
 exports.logout = (req, res) => {
     res.json({ message: 'Logged out successfully' });
 };

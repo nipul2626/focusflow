@@ -9,7 +9,7 @@ export default function Landing() {
     const y = useTransform(scrollY, [0, 500], [0, 120]);
     const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
-    // typing effect
+
     const text = "Focus smarter. Stay consistent.";
     const [displayText, setDisplayText] = useState("");
 
@@ -26,10 +26,10 @@ export default function Landing() {
     return (
         <div className="relative min-h-screen text-white pt-24 overflow-hidden">
 
-            {/* 🌊 BACKGROUND */}
+
             <div className="absolute inset-0 -z-10 animated-gradient" />
 
-            {/* FLOATING SHAPES */}
+
             <motion.div
                 className="absolute top-20 left-10 w-20 h-20 bg-purple-500/20 rounded-full blur-xl"
                 animate={{ y: [0, -30, 0], x: [0, 20, 0] }}
@@ -41,7 +41,7 @@ export default function Landing() {
                 transition={{ duration: 8, repeat: Infinity }}
             />
 
-            {/* 🧠 HERO */}
+
             <motion.section
                 className="section flex flex-col items-center justify-center text-center gap-4"
                 style={{ y, opacity }}
@@ -84,7 +84,7 @@ export default function Landing() {
                 </div>
             </motion.section>
 
-            {/* 💻 DASHBOARD PREVIEW */}
+
             <section className="section flex justify-center">
                 <motion.div
                     className="glass rounded-2xl p-6 w-full max-w-3xl shadow-xl shadow-purple-500/10"
@@ -129,7 +129,7 @@ export default function Landing() {
                 </motion.div>
             </section>
 
-            {/* 📌 FEATURES */}
+
             <section id="features" className="section max-w-6xl mx-auto text-center">
 
                 <motion.h2
@@ -158,7 +158,7 @@ export default function Landing() {
                             transition={{ delay: idx * 0.08 }}
                             whileHover={{ y: -6 }}
                         >
-                            {/* glow effect */}
+
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-purple-500/10 blur-xl" />
 
                             <div className="relative z-10">
@@ -177,7 +177,7 @@ export default function Landing() {
                 </div>
             </section>
 
-            {/* ⚙️ HOW IT WORKS */}
+
             <section id="how" className="section max-w-5xl mx-auto text-center">
                 <h2 className="text-3xl font-semibold mb-12">
                     How it Works
@@ -203,7 +203,7 @@ export default function Landing() {
                 </div>
             </section>
 
-            {/* FOOTER */}
+
             <footer className="border-t border-white/10 py-10 text-center text-gray-400 text-sm">
                 <p>© {new Date().getFullYear()} Focus Flow</p>
                 <p className="mt-2">Built for calm and focused productivity</p>

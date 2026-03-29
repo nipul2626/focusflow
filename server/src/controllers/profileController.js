@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const prisma = new PrismaClient();
 
-// Get profile
+
 exports.getProfile = async (req, res) => {
     try {
         const profile = await prisma.profile.findUnique({
@@ -32,7 +32,7 @@ exports.getProfile = async (req, res) => {
     }
 };
 
-// Update profile
+
 exports.updateProfile = async (req, res) => {
     try {
         const { displayName, bio, accentColor, focusDuration, shortBreak, longBreak } = req.body;
@@ -60,14 +60,14 @@ exports.updateProfile = async (req, res) => {
     }
 };
 
-// Upload avatar
+
 exports.uploadAvatar = async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        // Upload to Cloudinary
+
         const result = await cloudinary.uploader.upload(req.file.path, {
             resource_type: 'image',
             folder: 'focus-flow/avatars',
@@ -77,10 +77,10 @@ exports.uploadAvatar = async (req, res) => {
             ]
         });
 
-        // Delete temp file
+
         fs.unlinkSync(req.file.path);
 
-        // Update profile
+
         const profile = await prisma.profile.update({
             where: { userId: req.userId },
             data: { avatarUrl: result.secure_url }
@@ -95,7 +95,7 @@ exports.uploadAvatar = async (req, res) => {
     } catch (error) {
         console.error('Upload avatar error:', error);
 
-        // Clean up temp file on error
+
         if (req.file && fs.existsSync(req.file.path)) {
             fs.unlinkSync(req.file.path);
         }
@@ -104,7 +104,7 @@ exports.uploadAvatar = async (req, res) => {
     }
 };
 
-// Delete avatar
+
 exports.deleteAvatar = async (req, res) => {
     try {
         const profile = await prisma.profile.update({

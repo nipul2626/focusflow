@@ -36,7 +36,7 @@ export default function Signup() {
 
                 <form onSubmit={handleSubmit} className="space-y-5">
 
-                    {/* NAME */}
+
                     <div className="relative">
                         <input
                             type="text"
@@ -54,7 +54,7 @@ export default function Signup() {
                         </label>
                     </div>
 
-                    {/* EMAIL */}
+
                     <div className="relative">
                         <input
                             type="email"
@@ -72,7 +72,7 @@ export default function Signup() {
                         </label>
                     </div>
 
-                    {/* PASSWORD */}
+
                     <div className="relative">
                         <input
                             type="password"
@@ -91,7 +91,7 @@ export default function Signup() {
                         </label>
                     </div>
 
-                    {/* BUTTON */}
+
                     <div className="custom-btn-container w-full">
                         <button
                             type="submit"
@@ -103,7 +103,7 @@ export default function Signup() {
                     </div>
                 </form>
 
-                {/* FOOTER */}
+
                 <p className="text-center text-gray-400 mt-6 text-sm">
                     Already have an account?{' '}
                     <Link

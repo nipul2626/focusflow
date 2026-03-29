@@ -22,7 +22,7 @@ export default function EnhancedTimer() {
         fetchCurrentSession();
     }, []);
 
-    // Generate particles
+
     useEffect(() => {
         const newParticles = Array.from({ length: 20 }, (_, i) => ({
             id: i,
@@ -40,7 +40,7 @@ export default function EnhancedTimer() {
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
-    // Gradient colors based on session type
+
     const getGradientColors = () => {
         if (!session) return 'from-indigo-400 via-purple-500 to-pink-500';
 
@@ -74,9 +74,9 @@ export default function EnhancedTimer() {
 
     return (
         <div className="relative w-full h-[500px] rounded-3xl overflow-hidden shadow-2xl">
-            {/* Animated Gradient Background */}
+
             <div className={`absolute inset-0 bg-gradient-to-br ${getGradientColors()} animate-gradient-shift`}>
-                {/* Wave Animation */}
+
                 <svg
                     className="absolute bottom-0 w-full h-full opacity-20"
                     xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +117,7 @@ export default function EnhancedTimer() {
                     />
                 </svg>
 
-                {/* Floating Particles */}
+
                 {particles.map((particle) => (
                     <motion.div
                         key={particle.id}
@@ -141,9 +141,9 @@ export default function EnhancedTimer() {
                 ))}
             </div>
 
-            {/* Content */}
+
             <div className="relative z-10 h-full flex flex-col items-center justify-center p-8">
-                {/* Session Label */}
+
                 <motion.div
                     className="mb-8 px-6 py-3 bg-white/20 backdrop-blur-md rounded-full"
                     initial={{ opacity: 0, y: -20 }}
@@ -152,11 +152,11 @@ export default function EnhancedTimer() {
                     <p className="text-white text-lg font-medium">{getSessionLabel()}</p>
                 </motion.div>
 
-                {/* Timer Display */}
+
                 <div className="relative mb-12">
-                    {/* Progress Ring */}
+
                     <svg width="300" height="300" className="transform -rotate-90">
-                        {/* Background circle */}
+
                         <circle
                             cx="150"
                             cy="150"
@@ -166,7 +166,7 @@ export default function EnhancedTimer() {
                             fill="none"
                         />
 
-                        {/* Progress circle */}
+
                         <motion.circle
                             cx="150"
                             cy="150"
@@ -183,7 +183,7 @@ export default function EnhancedTimer() {
                         />
                     </svg>
 
-                    {/* Time Text */}
+
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                         <motion.span
                             className="text-8xl font-bold text-white drop-shadow-lg"
@@ -206,7 +206,7 @@ export default function EnhancedTimer() {
                     </div>
                 </div>
 
-                {/* Controls */}
+
                 <div className="flex items-center gap-4">
                     {!isRunning ? (
                         <motion.button

@@ -1,12 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Start new session
+
 exports.startSession = async (req, res) => {
     try {
         const { taskId, duration, type } = req.body;
 
-        // Check for existing active session
+
         const activeSession = await prisma.pomodoroSession.findFirst({
             where: {
                 userId: req.userId,
@@ -21,12 +21,12 @@ exports.startSession = async (req, res) => {
             });
         }
 
-        // Create new session
+
         const session = await prisma.pomodoroSession.create({
             data: {
                 userId: req.userId,
                 taskId: taskId || null,
-                duration: duration || 1500, // Default 25 minutes in seconds
+                duration: duration || 1500,
                 type: type || 'FOCUS'
             },
             include: {
@@ -45,7 +45,7 @@ exports.startSession = async (req, res) => {
     }
 };
 
-// Get current active session
+
 exports.getCurrentSession = async (req, res) => {
     try {
         const session = await prisma.pomodoroSession.findFirst({
@@ -67,7 +67,7 @@ exports.getCurrentSession = async (req, res) => {
     }
 };
 
-// Complete session
+
 exports.completeSession = async (req, res) => {
     try {
         const { sessionId } = req.body;
@@ -83,7 +83,7 @@ exports.completeSession = async (req, res) => {
             return res.status(404).json({ error: 'Session not found' });
         }
 
-        // Update session
+
         const updatedSession = await prisma.pomodoroSession.update({
             where: { id: sessionId },
             data: {
@@ -95,7 +95,7 @@ exports.completeSession = async (req, res) => {
             }
         });
 
-        // If linked to task, update actual minutes
+
         if (session.taskId) {
             const task = await prisma.task.findUnique({
                 where: { id: session.taskId }
@@ -122,7 +122,7 @@ exports.completeSession = async (req, res) => {
     }
 };
 
-// Cancel session
+
 exports.cancelSession = async (req, res) => {
     try {
         const { sessionId } = req.body;
@@ -150,10 +150,10 @@ exports.cancelSession = async (req, res) => {
     }
 };
 
-// Get session statistics
+
 exports.getSessionStats = async (req, res) => {
     try {
-        const { timeframe } = req.query; // 'today', 'week', 'month'
+        const { timeframe } = req.query;
 
         let startDate = new Date();
         if (timeframe === 'today') {
